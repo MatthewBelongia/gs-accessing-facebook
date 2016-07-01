@@ -1,9 +1,10 @@
-package hello;
+package facebookIntegration.hello;
 
 import javax.inject.Inject;
 
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.Page;
 import org.springframework.social.facebook.api.PagedList;
 import org.springframework.social.facebook.api.Post;
 import org.springframework.stereotype.Controller;
@@ -29,11 +30,12 @@ public class HelloController {
         if (connectionRepository.findPrimaryConnection(Facebook.class) == null) {
             return "redirect:/connect/facebook";
         }
-
+        PagedList<Page> likedPages = facebook.likeOperations().getPagesLiked();
+        model.addAttribute("likedPages",likedPages);
         model.addAttribute("facebookProfile", facebook.userOperations().getUserProfile());
         PagedList<Post> feed = facebook.feedOperations().getFeed();
         model.addAttribute("feed", feed);
-        return "hello";
+        return "facebookIntegration/hello";
     }
 
 }
